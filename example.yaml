@@ -1,0 +1,17 @@
+documents:
+  - name: example_data
+    rows: 1000
+    columns:
+      - name: id
+        type: int
+        options: [seq]
+      - name: name
+        type: string
+        options: [first_name]
+      - name: last_name
+        type: string
+        options: [last_name]
+      - name: random_date
+        type: date
+      - name: random_int
+        type: int
