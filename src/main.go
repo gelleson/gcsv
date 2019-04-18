@@ -16,24 +16,23 @@ func main() {
 
 	var rootCmd = &cobra.Command{
 		Use:   "root [sub]",
-		Short: "My root command",
 	}
 
 	var subCmd = &cobra.Command{
 		Use:   "generate [FILE NAME]",
-		Short: "My subcommand",
+		Short: "Generate csv",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			if len(args) > 1 || len(args) == 0 {
-				cmd.Usage()
-				fmt.Println("Only 1 args we need but expected ", len(args))
+				fmt.Println(" ", len(args))
 				os.Exit(0)
 			}
 			if !strings.HasSuffix(args[0], ".yaml") {
-				log.Fatal("Only yaml fiel we need")
+				log.Fatal("1")
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			file, err := os.OpenFile(args[0], os.O_RDONLY, 0644)
+			file, err := os.OpenFile(args[0], os.O_RDONLY, 0600)
+
 			if err != nil {
 				log.Fatal(err)
 			}
