@@ -18,9 +18,9 @@ func NewGenerator(documents []Document) *Generator {
 	return &Generator{documents: documents}
 }
 
-func (g Generator) generate()  {
+func (g Generator) generate() {
 	for _, doc := range g.documents {
-		document, err := os.OpenFile(fmt.Sprintf("%s.csv", doc.Name), os.O_CREATE | os.O_WRONLY, 0644)
+		document, err := os.OpenFile(fmt.Sprintf("%s.csv", doc.Name), os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -35,11 +35,11 @@ func (g Generator) generate()  {
 
 func (g Generator) newRecords(document Document) [][]string {
 	result := make([][]string, document.Rows)
-	for i := 0; i < document.Rows ; i++  {
+	for i := 0; i < document.Rows; i++ {
 		record := make([]string, 0)
 		for _, value := range document.Columns {
 			field := value.Field
-			if containOption(SEQ, value.Field.Option)  && value.Field.Type == INT{
+			if containOption(SEQ, value.Field.Option) && value.Field.Type == INT {
 				record = append(record, fmt.Sprintf("%d", i))
 				continue
 			} else if containOption(SEQ, field.Option) {
@@ -48,7 +48,7 @@ func (g Generator) newRecords(document Document) [][]string {
 
 			switch field.Type {
 			case DATE:
-				t := time.Date(fake.Year(1999,2019), time.Month(fake.MonthNum()), fake.Day(), 0, 0,0,0,time.UTC).String()
+				t := time.Date(fake.Year(1999, 2019), time.Month(fake.MonthNum()), fake.Day(), 0, 0, 0, 0, time.UTC).String()
 				record = append(record, t)
 			case STRING:
 				if containOption(NAME, field.Option) {
@@ -59,7 +59,7 @@ func (g Generator) newRecords(document Document) [][]string {
 					record = append(record, fake.Word())
 				}
 			case FLOAT:
-				record = append(record, fmt.Sprintf("%f",rand.Int63()))
+				record = append(record, fmt.Sprintf("%f", rand.Int63()))
 			case INT:
 				record = append(record, fmt.Sprintf("%d", rand.Int()))
 			}
@@ -70,10 +70,9 @@ func (g Generator) newRecords(document Document) [][]string {
 	return result
 }
 
-func (g Generator) Generate()  {
+func (g Generator) Generate() {
 	g.generate()
 }
-
 
 func containOption(term OPTION, arr []OPTION) bool {
 	for _, value := range arr {
@@ -84,4 +83,3 @@ func containOption(term OPTION, arr []OPTION) bool {
 	}
 	return false
 }
-

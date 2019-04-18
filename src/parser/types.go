@@ -1,12 +1,7 @@
 package parser
 
-
-
-
-
 type Config struct {
 	Documents []Documents `yaml:"documents"`
-
 }
 type Documents struct {
 	Name    string   `yaml:"name"`
@@ -15,7 +10,7 @@ type Documents struct {
 }
 
 type Column struct {
-	Name string `yaml:"name"`
-	Type string `yaml:"type"`
+	Name   string   `yaml:"name"`
+	Type   string   `yaml:"type"`
 	Option []string `yaml:"options,flow"`
 }

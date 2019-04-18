@@ -3,7 +3,7 @@ package generator
 type TYPE int
 
 const (
-	INT  TYPE = iota
+	INT TYPE = iota
 	FLOAT
 	STRING
 	DATE
@@ -21,4 +21,3 @@ const (
 	COMPANY
 	NIL
 )
-

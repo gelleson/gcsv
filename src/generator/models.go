@@ -1,8 +1,8 @@
 package generator
 
 type Document struct {
-	Name string
-	Rows int
+	Name    string
+	Rows    int
 	Columns []Column
 }
 
@@ -11,11 +11,11 @@ func NewDocument(name string) *Document {
 }
 
 type Column struct {
-	Name string
-	Field Field
+	Name     string
+	Field    Field
 	Position int
 }
 type Field struct {
-	Type TYPE
+	Type   TYPE
 	Option []OPTION
 }

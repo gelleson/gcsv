@@ -1,4 +1,4 @@
-package main
+package src
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ import (
 func main() {
 
 	var rootCmd = &cobra.Command{
-		Use:   "root [sub]",
+		Use: "root [sub]",
 	}
 
 	var subCmd = &cobra.Command{

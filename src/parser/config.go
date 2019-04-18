@@ -13,17 +13,17 @@ func NewParser(config Config) *Parser {
 }
 func (p Parser) prepareDocument() []generator.Document {
 	var documents []generator.Document
-	for _, doc  := range p.config.Documents {
+	for _, doc := range p.config.Documents {
 		document := *generator.NewDocument(doc.Name)
 		document.Rows = doc.Count
 		for key, value := range doc.Columns {
 			cType, cOptions := p.getColumn(value.Type, value.Option)
 			document.Columns = append(document.Columns, generator.Column{
-				Name: value.Name,
-				Position:key,
+				Name:     value.Name,
+				Position: key,
 				Field: generator.Field{
-					Type: cType,
-					Option:cOptions,
+					Type:   cType,
+					Option: cOptions,
 				},
 			})
 		}
@@ -40,26 +40,30 @@ func (p Parser) getColumn(t string, options []string) (generator.TYPE, []generat
 
 func (p Parser) columnType(c string) generator.TYPE {
 	switch c {
-	case "int": {
-		return generator.INT
-	}
-	case "float":{
-		return generator.FLOAT
-	}
-	case "date": {
-		return generator.DATE 
-	}
-	case "string": {
-		return generator.STRING
-	}
+	case "int":
+		{
+			return generator.INT
+		}
+	case "float":
+		{
+			return generator.FLOAT
+		}
+	case "date":
+		{
+			return generator.DATE
+		}
+	case "string":
+		{
+			return generator.STRING
+		}
 	default:
 		return generator.STRING
 	}
 }
 
-func (p Parser) columnOptions(options []string) []generator.OPTION  {
+func (p Parser) columnOptions(options []string) []generator.OPTION {
 	opts := make([]generator.OPTION, len(options))
-	for i :=0; i < len(options) ; i++  {
+	for i := 0; i < len(options); i++ {
 		switch options[i] {
 		case "uniq":
 			opts[i] = generator.UNIQUE
@@ -82,7 +86,3 @@ func (p Parser) columnOptions(options []string) []generator.OPTION  {
 func (p Parser) PrepareDocument() []generator.Document {
 	return p.prepareDocument()
 }
-
-
-
-
