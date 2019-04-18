@@ -22,7 +22,7 @@ func main() {
 		Use:   "generate [FILE NAME]",
 		Short: "Generate csv",
 		PreRun: func(cmd *cobra.Command, args []string) {
-			if len(args) > 1 || len(args) == 0 {
+			if  len(args) == 0 {
 				fmt.Println(" ", len(args))
 				os.Exit(0)
 			}
