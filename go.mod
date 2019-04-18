@@ -1,4 +1,4 @@
-module github.com/gelleson/generator/csv
+module github.com/gelleson/gcsv
 
 go 1.12
 

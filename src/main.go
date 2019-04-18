@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/gelleson/generator/csv/src/generator"
-	"github.com/gelleson/generator/csv/src/parser"
+	"github.com/gelleson/gcsv/src/generator"
+	"github.com/gelleson/gcsv/src/parser"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
