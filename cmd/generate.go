@@ -68,7 +68,12 @@ var generate = &cobra.Command{
 		parser := parser.NewParser(config)
 		documents := parser.PreparedDocument()
 		gen := generator.NewGenerator(documents)
-		gen.Generate()
+		if err = gen.Generate(); err != nil {
+			fmt.Println("")
+			fmt.Println(err.Error())
+			fmt.Println("")
+			os.Exit(1)
+		}
 
 		fmt.Println("")
 		fmt.Println("CSV is generated")

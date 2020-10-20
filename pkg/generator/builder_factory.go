@@ -20,32 +20,26 @@
  * SOFTWARE.
  */
 
-package parser
+package generator
 
-type Config struct {
-	Documents []Documents `yaml:"documents"`
-}
+import (
+	"errors"
+	"fmt"
+	"github.com/gelleson/gcsv/pkg/datatypes"
+)
 
-// Documents struct to keep config to generate document
-type Documents struct {
-	// Name of the output file
-	Name string `yaml:"name"`
-	// Column configs should be generated
-	Columns []Column `yaml:"columns"`
-	// WithHeader variable to generate headers
-	WithHeader bool `yaml:"with_header"`
-	// Count is total row
-	Count int `yaml:"rows"`
-}
+func BuilderFactory(dt TYPE) (Builder, error) {
 
-// Column struct to keep config to generate column
-type Column struct {
-	// Name of the column
-	Name string `yaml:"name"`
-	// Type of the column will be generated
-	Type string `yaml:"type"`
-	// Option
-	Option []string `yaml:"options,flow"`
-	// Kwargs extra configs
-	Kwargs map[string]string `yaml:"kwargs"`
+	switch dt {
+	case INT:
+		return datatypes.NewNumberBuilder(datatypes.INTEGER_NUMBER), nil
+	case SEQ:
+		return datatypes.NewSequenceBuilder(), nil
+	case PERSONAL:
+		return datatypes.NewHumanNameBuilder(), nil
+	case DATE:
+		return datatypes.NewDateBuilder(), nil
+	default:
+		return nil, errors.New(fmt.Sprintf("%v not support type", dt))
+	}
 }

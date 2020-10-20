@@ -20,32 +20,62 @@
  * SOFTWARE.
  */
 
-package parser
+package datatypes
 
-type Config struct {
-	Documents []Documents `yaml:"documents"`
+import (
+	"errors"
+	"github.com/icrowley/fake"
+)
+
+const (
+	FIRST_NAME = "first_name"
+	LAST_NAME  = "last_name"
+	FULLNAME   = "fullname"
+)
+
+type HumanNameBuilder struct {
+	mode      string
+	generator func() string
 }
 
-// Documents struct to keep config to generate document
-type Documents struct {
-	// Name of the output file
-	Name string `yaml:"name"`
-	// Column configs should be generated
-	Columns []Column `yaml:"columns"`
-	// WithHeader variable to generate headers
-	WithHeader bool `yaml:"with_header"`
-	// Count is total row
-	Count int `yaml:"rows"`
+func NewHumanNameBuilder() *HumanNameBuilder {
+	return &HumanNameBuilder{}
 }
 
-// Column struct to keep config to generate column
-type Column struct {
-	// Name of the column
-	Name string `yaml:"name"`
-	// Type of the column will be generated
-	Type string `yaml:"type"`
-	// Option
-	Option []string `yaml:"options,flow"`
-	// Kwargs extra configs
-	Kwargs map[string]string `yaml:"kwargs"`
+func (h *HumanNameBuilder) Validate() error {
+
+	switch h.mode {
+	case FIRST_NAME:
+		h.generator = fake.FirstName
+
+		return nil
+	case LAST_NAME:
+		h.generator = fake.LastName
+
+		return nil
+	case FULLNAME:
+		h.generator = fake.FullName
+
+		return nil
+	default:
+		return errors.New("not valid argument")
+	}
+}
+
+func (h *HumanNameBuilder) Initiate(config map[string]string) error {
+
+	mode, exist := config["mode"]
+
+	if !exist {
+		mode = FULLNAME
+	}
+
+	h.mode = mode
+
+	return nil
+}
+
+func (h *HumanNameBuilder) Build(s ...string) string {
+
+	return h.generator()
 }

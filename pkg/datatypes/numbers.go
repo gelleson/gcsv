@@ -20,32 +20,68 @@
  * SOFTWARE.
  */
 
-package parser
+package datatypes
 
-type Config struct {
-	Documents []Documents `yaml:"documents"`
+import (
+	"github.com/icrowley/fake"
+	"strconv"
+)
+
+type numbersType string
+
+const (
+	INTEGER_NUMBER = "int"
+	FLOAT_NUMBER   = "float"
+)
+
+type NumberBuilder struct {
+	numbersMode numbersType
+	from        float64
+	to          float64
 }
 
-// Documents struct to keep config to generate document
-type Documents struct {
-	// Name of the output file
-	Name string `yaml:"name"`
-	// Column configs should be generated
-	Columns []Column `yaml:"columns"`
-	// WithHeader variable to generate headers
-	WithHeader bool `yaml:"with_header"`
-	// Count is total row
-	Count int `yaml:"rows"`
+func NewNumberBuilder(numbersMode numbersType) *NumberBuilder {
+	return &NumberBuilder{numbersMode: numbersMode}
 }
 
-// Column struct to keep config to generate column
-type Column struct {
-	// Name of the column
-	Name string `yaml:"name"`
-	// Type of the column will be generated
-	Type string `yaml:"type"`
-	// Option
-	Option []string `yaml:"options,flow"`
-	// Kwargs extra configs
-	Kwargs map[string]string `yaml:"kwargs"`
+func (n *NumberBuilder) Initiate(config map[string]string) error {
+
+	from, exist := config["from"]
+
+	if exist {
+		fromInt, err := strconv.Atoi(from)
+
+		if err != nil {
+			return err
+		}
+
+		n.from = float64(fromInt)
+	} else {
+		n.from = 100_000_000
+	}
+
+	to, exist := config["from"]
+
+	if exist {
+		toInt, err := strconv.Atoi(to)
+
+		if err != nil {
+			return err
+		}
+
+		n.to = float64(toInt)
+
+	} else {
+		n.to = 0
+	}
+
+	return nil
+}
+
+func (n *NumberBuilder) Build(args ...string) string {
+	return fake.Digits()
+}
+
+func (n *NumberBuilder) Validate() error {
+	return nil
 }
