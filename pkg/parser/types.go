@@ -32,6 +32,8 @@ type Documents struct {
 	Name string `yaml:"name"`
 	// Column configs should be generated
 	Columns []Column `yaml:"columns"`
+	// WithHeader variable to generate headers
+	WithHeader bool `yaml:"with_header"`
 	// Count is total row
 	Count int `yaml:"rows"`
 }
