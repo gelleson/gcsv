@@ -41,10 +41,12 @@ var generate = &cobra.Command{
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fmt.Println(" ", len(args))
-			os.Exit(0)
+			os.Exit(1)
 		}
 		if !strings.HasSuffix(args[0], ".yaml") && !strings.HasSuffix(args[0], ".yml") {
-			log.Fatal("1")
+			fmt.Println(fmt.Sprintf("Not valid file extetion. it's should be .yml or yaml"))
+			os.Exit(1)
+
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
@@ -60,12 +62,17 @@ var generate = &cobra.Command{
 		var config parser.Config
 		err = yaml.Unmarshal(bytesByFile, &config)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			os.Exit(1)
 		}
 		parser := parser.NewParser(config)
 		documents := parser.PreparedDocument()
 		gen := generator.NewGenerator(documents)
 		gen.Generate()
-		log.Println("CSV is generated")
+
+		fmt.Println("")
+		fmt.Println("CSV is generated")
+		fmt.Println("")
+
 	},
 }
