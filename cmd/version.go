@@ -20,23 +20,45 @@
  * SOFTWARE.
  */
 
-package main
+package cmd
 
 import (
 	"fmt"
-	"github.com/gelleson/gcsv/cmd"
+	"github.com/common-nighthawk/go-figure"
+	"github.com/spf13/cobra"
 )
 
 var (
-	version = ""
-	commit  = ""
-	date    = ""
+	tag       = ""
+	commitStr = ""
+	dateStr   = ""
 )
 
-func main() {
-	cmd.SetVersion(version, commit, date)
+// SetVersion save arguments to vars
+func SetVersion(version, commit, date string) {
+	tag = version
+	commitStr = commit
+	dateStr = date
+}
 
-	if err := cmd.Execute(); err != nil {
-		fmt.Println(err.Error())
-	}
+var version = &cobra.Command{
+	Use:     "version",
+	Short:   "Reflect build version, hash",
+	Aliases: []string{"v", "ver"},
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("")
+		fmt.Println("")
+
+		myFigure := figure.NewColorFigure("GCSV", "", "blue", true)
+		myFigure.Print()
+
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("Version: ", tag)
+		fmt.Println("Commit: ", commitStr)
+		fmt.Println("Build Date: ", dateStr)
+		fmt.Println("")
+		fmt.Println("")
+
+	},
 }

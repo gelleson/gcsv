@@ -30,6 +30,7 @@ var root = &cobra.Command{
 
 func init() {
 	root.AddCommand(generate)
+	root.AddCommand(version)
 }
 
 func Execute() error {
