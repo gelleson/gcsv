@@ -43,7 +43,7 @@ var generate = &cobra.Command{
 			fmt.Println(" ", len(args))
 			os.Exit(0)
 		}
-		if !strings.HasSuffix(args[0], ".yaml") {
+		if !strings.HasSuffix(args[0], ".yaml") && !strings.HasSuffix(args[0], ".yml") {
 			log.Fatal("1")
 		}
 	},
