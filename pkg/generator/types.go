@@ -28,18 +28,7 @@ const (
 	INT TYPE = iota
 	FLOAT
 	STRING
+	PERSONAL
 	DATE
-)
-
-type OPTION int
-
-const (
-	SEQ OPTION = iota
-	UNIQUE
-	NAME
-	LAST_NAME
-	ADDRESS
-	SENTENCE
-	COMPANY
-	NIL
+	SEQ
 )

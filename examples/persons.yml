@@ -4,15 +4,18 @@ documents:
     with_header: true
     columns:
       - name: id
-        type: int
-        options: [seq]
-      - name: name
-        type: string
-        options: [first_name]
+        type: seq
+        kwargs:
+          initial_sequence: 100
       - name: last_name
-        type: string
-        options: [last_name]
+        type: personal
+        kwargs:
+          mode: last_name
       - name: random_date
         type: date
+        kwargs:
+          format: 2006-01-02 03:04:05
+          from: 2020
+          to: 2021
       - name: random_int
         type: int

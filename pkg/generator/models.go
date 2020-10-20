@@ -33,13 +33,20 @@ func NewDocument(name string) Document {
 	return Document{Name: name}
 }
 
-type Column struct {
-	Name     string
-	Field    Field
-	Position int
+type Builder interface {
+	Initiate(map[string]string) error
+	Build(...string) string
+	Validate() error
 }
 
 type Field struct {
-	Type   TYPE
-	Option []OPTION
+	Type TYPE
+}
+
+type Column struct {
+	Name     string
+	Field    Field
+	Kwargs   map[string]string
+	Position int
+	Builder  Builder
 }

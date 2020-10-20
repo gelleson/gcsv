@@ -20,32 +20,55 @@
  * SOFTWARE.
  */
 
-package parser
+package datatypes
 
-type Config struct {
-	Documents []Documents `yaml:"documents"`
+import (
+	"fmt"
+	"strconv"
+	"sync"
+)
+
+type SequenceBuilder struct {
+	sequence int
+	mx       sync.Mutex
 }
 
-// Documents struct to keep config to generate document
-type Documents struct {
-	// Name of the output file
-	Name string `yaml:"name"`
-	// Column configs should be generated
-	Columns []Column `yaml:"columns"`
-	// WithHeader variable to generate headers
-	WithHeader bool `yaml:"with_header"`
-	// Count is total row
-	Count int `yaml:"rows"`
+func NewSequenceBuilder() *SequenceBuilder {
+	return &SequenceBuilder{}
 }
 
-// Column struct to keep config to generate column
-type Column struct {
-	// Name of the column
-	Name string `yaml:"name"`
-	// Type of the column will be generated
-	Type string `yaml:"type"`
-	// Option
-	Option []string `yaml:"options,flow"`
-	// Kwargs extra configs
-	Kwargs map[string]string `yaml:"kwargs"`
+func (b *SequenceBuilder) Initiate(config map[string]string) error {
+	b.mx.Lock()
+	defer b.mx.Unlock()
+
+	b.sequence = 1
+
+	_, exist := config["initial_sequence"]
+
+	if exist {
+		sequence := config["initial_sequence"]
+
+		sequenceInt, err := strconv.Atoi(sequence)
+
+		if err != nil {
+			return err
+		}
+
+		b.sequence = sequenceInt
+	}
+
+	return nil
+}
+
+func (b *SequenceBuilder) Validate() error {
+	return nil
+}
+
+func (b *SequenceBuilder) Build(args ...string) string {
+	b.mx.Lock()
+	defer b.mx.Unlock()
+
+	b.sequence++
+
+	return fmt.Sprintf("%d", b.sequence)
 }

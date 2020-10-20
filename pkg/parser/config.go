@@ -43,25 +43,19 @@ func (p Parser) prepareDocument() []generator.Document {
 		document.WithHeader = doc.WithHeader
 		document.Rows = doc.Count
 		for columnIndex, column := range doc.Columns {
-			cType, cOptions := p.getColumn(column.Type, column.Option)
+			cType := p.columnType(column.Type)
 			document.Columns = append(document.Columns, generator.Column{
 				Name:     column.Name,
 				Position: columnIndex,
 				Field: generator.Field{
-					Type:   cType,
-					Option: cOptions,
+					Type: cType,
 				},
+				Kwargs: column.Kwargs,
 			})
 		}
 		documents = append(documents, document)
 	}
 	return documents
-}
-
-func (p Parser) getColumn(t string, options []string) (generator.TYPE, []generator.OPTION) {
-	columnType := p.columnType(t)
-	opts := p.columnOptions(options)
-	return columnType, opts
 }
 
 func (p Parser) columnType(c string) generator.TYPE {
@@ -70,40 +64,17 @@ func (p Parser) columnType(c string) generator.TYPE {
 		return generator.INT
 	case "float":
 		return generator.FLOAT
-
 	case "date":
 		return generator.DATE
-
+	case "seq":
+		return generator.SEQ
 	case "string":
-		return generator.STRING
-
+		return generator.PERSONAL
+	case "personal":
+		return generator.PERSONAL
 	default:
 		return generator.STRING
 	}
-}
-
-func (p Parser) columnOptions(options []string) []generator.OPTION {
-	opts := make([]generator.OPTION, len(options))
-
-	for i := 0; i < len(options); i++ {
-		switch options[i] {
-		case "uniq":
-			opts[i] = generator.UNIQUE
-		case "address":
-		case "name":
-			opts[i] = generator.NAME
-		case "last_name":
-			opts[i] = generator.LAST_NAME
-		case "seq":
-			opts[i] = generator.SEQ
-		case "company":
-			opts[i] = generator.COMPANY
-		default:
-			opts[i] = generator.NIL
-		}
-	}
-
-	return opts
 }
 
 // PreparedDocument are all documents will generate
