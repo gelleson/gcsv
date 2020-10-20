@@ -15,6 +15,7 @@ gcsv generate example.yaml
 documents:
     - name: example_data
       rows: 1000
+      with_header: true
       columns:
         - name: id
           type: int
@@ -36,9 +37,8 @@ out:
 CSV is generated
 ```
 
-|    |             |           |                               |                     | 
+| i  | name        | last_name | random_date                   | random_int          | 
 |----|-------------|-----------|-------------------------------|---------------------| 
-| 0  | similique   | Campbell  | 2009-11-29 00:00:00 +0000 UTC | 5577006791947779410 | 
 | 1  | pariatur    | Robertson | 2007-08-14 00:00:00 +0000 UTC | 8674665223082153551 | 
 | 2  | corrupti    | Parker    | 2005-09-12 00:00:00 +0000 UTC | 6129484611666145821 | 
 | 3  | reiciendis  | Elliott   | 2012-10-16 00:00:00 +0000 UTC | 4037200794235010051 | 
