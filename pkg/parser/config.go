@@ -40,6 +40,7 @@ func (p Parser) prepareDocument() []generator.Document {
 	var documents []generator.Document
 	for _, doc := range p.config.Documents {
 		document := generator.NewDocument(doc.Name)
+		document.WithHeader = doc.WithHeader
 		document.Rows = doc.Count
 		for columnIndex, column := range doc.Columns {
 			cType, cOptions := p.getColumn(column.Type, column.Option)
