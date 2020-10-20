@@ -68,7 +68,8 @@ func (g Generator) newRecords(document Document) [][]string {
 
 		result = append(result, headers)
 	}
-	for i := 0; i < document.Rows; i++ {
+
+	for i := 1; i < document.Rows; i++ {
 		record := make([]string, 0)
 
 		for _, value := range document.Columns {
