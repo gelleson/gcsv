@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/gelleson/gcsv/src/generator"
+	"github.com/gelleson/gcsv/pkg/generator"
 )
 
 type Parser struct {

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/gelleson/gcsv/src/generator"
-	"github.com/gelleson/gcsv/src/parser"
+	"github.com/gelleson/gcsv/pkg/generator"
+	"github.com/gelleson/gcsv/pkg/parser"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -22,7 +22,7 @@ func main() {
 		Use:   "generate [FILE NAME]",
 		Short: "Generate csv",
 		PreRun: func(cmd *cobra.Command, args []string) {
-			if  len(args) == 0 {
+			if len(args) == 0 {
 				fmt.Println(" ", len(args))
 				os.Exit(0)
 			}
