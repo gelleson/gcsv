@@ -1,7 +1,7 @@
 documents:
   - name: example_data
     rows: 1000
-    with_header: false
+    with_header: true
     columns:
       - name: id
         type: int
