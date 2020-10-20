@@ -3,6 +3,7 @@ module github.com/gelleson/gcsv
 go 1.12
 
 require (
+	github.com/common-nighthawk/go-figure v0.0.0-20200609044655-c4b36f998cf2
 	github.com/corpix/uarand v0.0.0 // indirect
 	github.com/go-yaml/yaml v2.1.0+incompatible // indirect
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
