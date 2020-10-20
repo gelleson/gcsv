@@ -6,8 +6,8 @@ type Document struct {
 	Columns []Column
 }
 
-func NewDocument(name string) *Document {
-	return &Document{Name: name}
+func NewDocument(name string) Document {
+	return Document{Name: name}
 }
 
 type Column struct {
