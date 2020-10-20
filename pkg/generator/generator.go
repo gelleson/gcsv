@@ -56,9 +56,21 @@ func (g Generator) generate() {
 }
 
 func (g Generator) newRecords(document Document) [][]string {
-	result := make([][]string, document.Rows)
+
+	result := make([][]string, 0)
+
+	if document.WithHeader {
+
+		headers := make([]string, 0)
+		for _, column := range document.Columns {
+			headers = append(headers, column.Name)
+		}
+
+		result = append(result, headers)
+	}
 	for i := 0; i < document.Rows; i++ {
 		record := make([]string, 0)
+
 		for _, value := range document.Columns {
 			field := value.Field
 			if containOption(SEQ, value.Field.Option) && value.Field.Type == INT {
@@ -87,7 +99,7 @@ func (g Generator) newRecords(document Document) [][]string {
 			}
 
 		}
-		result[i] = record
+		result = append(result, record)
 	}
 	return result
 }
