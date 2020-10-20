@@ -23,9 +23,10 @@
 package generator
 
 type Document struct {
-	Name    string
-	Rows    int
-	Columns []Column
+	Name       string
+	Rows       int
+	Columns    []Column
+	WithHeader bool
 }
 
 func NewDocument(name string) Document {
