@@ -15,6 +15,7 @@ type Column struct {
 	Field    Field
 	Position int
 }
+
 type Field struct {
 	Type   TYPE
 	Option []OPTION
