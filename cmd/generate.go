@@ -44,7 +44,7 @@ var generate = &cobra.Command{
 			os.Exit(1)
 		}
 		if !strings.HasSuffix(args[0], ".yaml") && !strings.HasSuffix(args[0], ".yml") {
-			fmt.Println(fmt.Sprintf("Not valid file extension. it's should be .yml or yaml"))
+			fmt.Println(fmt.Sprintf("Not valid file extension. it's should be .yml or .yaml"))
 			os.Exit(1)
 
 		}
