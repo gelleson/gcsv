@@ -23,6 +23,7 @@
 package generator
 
 import (
+	"github.com/gelleson/gcsv/pkg/builder"
 	"github.com/gelleson/gcsv/pkg/builder/types"
 )
 
@@ -37,12 +38,6 @@ func NewDocument(name string) Document {
 	return Document{Name: name}
 }
 
-type Builder interface {
-	Initiate(map[string]string) error
-	Build(...string) string
-	Validate() error
-}
-
 type Field struct {
 	Type types.TYPE
 }
@@ -52,5 +47,5 @@ type Column struct {
 	Field    Field
 	Kwargs   map[string]string
 	Position int
-	Builder  Builder
+	Builder  builder.Builder
 }
