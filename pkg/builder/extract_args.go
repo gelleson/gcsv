@@ -22,10 +22,56 @@
 
 package builder
 
-import "github.com/gelleson/gcsv/pkg/builder/types"
+import (
+	"errors"
+	"github.com/gelleson/gcsv/pkg/builder/types"
+	"github.com/mitchellh/mapstructure"
+)
 
-type Builder interface {
-	Initiate(config types.Config) error
-	Build(...string) string
-	Validate() error
+type Decoder interface {
+	Decode(interface{}) error
+}
+
+func ExtractArgs(typeObj types.TYPE, decoded map[string]interface{}) (types.Config, error) {
+
+	switch typeObj {
+	case types.INT, types.FLOAT:
+		obj := types.Number{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	case types.SEQ:
+		obj := types.Sequence{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	case types.PERSONAL:
+		obj := types.Human{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	case types.DATE:
+		obj := types.Date{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	default:
+		return nil, errors.New("doesn't support type")
+	}
 }

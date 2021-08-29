@@ -45,7 +45,7 @@ type Field struct {
 type Column struct {
 	Name     string
 	Field    Field
-	Kwargs   map[string]string
+	Kwargs   map[string]interface{}
 	Position int
 	Builder  builder.Builder
 }

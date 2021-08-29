@@ -20,12 +20,50 @@
  * SOFTWARE.
  */
 
-package builder
+package types
 
-import "github.com/gelleson/gcsv/pkg/builder/types"
+import (
+	"github.com/stretchr/testify/suite"
+	"testing"
+)
 
-type Builder interface {
-	Initiate(config types.Config) error
-	Build(...string) string
-	Validate() error
+type DateSuite struct {
+	suite.Suite
+	dateBuilder DateBuilder
+}
+
+func (s *DateSuite) SetupTest() {
+	s.dateBuilder = *NewDateBuilder()
+}
+
+func (s DateSuite) TestInitial() {
+	err := s.dateBuilder.Initiate(Sequence{
+		Initial: 2,
+	})
+
+	s.Assert().Error(err)
+
+	err = s.dateBuilder.Initiate(Date{
+		From: "2001-01-01",
+		To:   "2010-10-01",
+	})
+
+	s.Assert().Nil(err)
+}
+
+func (s DateSuite) TestBuild() {
+	err := s.dateBuilder.Initiate(Date{
+		From: "2001-01-01",
+		To:   "2010-10-01",
+	})
+
+	s.Assert().Nil(err)
+
+	n1 := s.dateBuilder.Build()
+
+	s.Assert().NotZero(n1)
+}
+
+func TestDate(t *testing.T) {
+	suite.Run(t, new(DateSuite))
 }

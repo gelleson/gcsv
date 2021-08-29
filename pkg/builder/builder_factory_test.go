@@ -22,10 +22,70 @@
 
 package builder
 
-import "github.com/gelleson/gcsv/pkg/builder/types"
+import (
+	"github.com/gelleson/gcsv/pkg/builder/types"
+	"testing"
+)
 
-type Builder interface {
-	Initiate(config types.Config) error
-	Build(...string) string
-	Validate() error
+func TestFactory(t *testing.T) {
+	type args struct {
+		dt types.TYPE
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "date case",
+			args: args{
+				dt: types.DATE,
+			},
+			wantErr: false,
+		},
+		{
+			name: "int case",
+			args: args{
+				dt: types.INT,
+			},
+			wantErr: false,
+		},
+		{
+			name: "float case",
+			args: args{
+				dt: types.FLOAT,
+			},
+			wantErr: false,
+		},
+		{
+			name: "personal case",
+			args: args{
+				dt: types.PERSONAL,
+			},
+			wantErr: false,
+		},
+		{
+			name: "seq case",
+			args: args{
+				dt: types.SEQ,
+			},
+			wantErr: false,
+		},
+		{
+			name: "str case",
+			args: args{
+				dt: types.STRING,
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := Factory(tt.args.dt)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Factory() arg = %v error = %v, wantErr %v", tt.args.dt, err, tt.wantErr)
+				return
+			}
+		})
+	}
 }

@@ -24,7 +24,6 @@ package types
 
 import (
 	"errors"
-	"github.com/gelleson/gcsv/pkg/builder"
 	"github.com/icrowley/fake"
 )
 
@@ -73,7 +72,7 @@ func (h *HumanNameBuilder) Validate() error {
 	}
 }
 
-func (h *HumanNameBuilder) Initiate(config builder.Config) error {
+func (h *HumanNameBuilder) Initiate(config Config) error {
 
 	if err := config.Validate(); err != nil {
 		return err
@@ -91,6 +90,8 @@ func (h *HumanNameBuilder) Initiate(config builder.Config) error {
 }
 
 func (h *HumanNameBuilder) Build(s ...string) string {
+
+	_ = h.Validate()
 
 	return h.generator()
 }

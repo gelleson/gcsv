@@ -47,5 +47,5 @@ type Column struct {
 	// Option
 	Option []string `yaml:"options,flow"`
 	// Kwargs extra configs
-	Kwargs map[string]string `yaml:"kwargs"`
+	Kwargs map[string]interface{} `yaml:"kwargs"`
 }

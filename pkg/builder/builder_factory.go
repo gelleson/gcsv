@@ -26,14 +26,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gelleson/gcsv/pkg/builder/types"
-	"github.com/gelleson/gcsv/pkg/generator"
 )
 
-func Factory(dt types.TYPE) (generator.Builder, error) {
+func Factory(dt types.TYPE) (Builder, error) {
 
 	switch dt {
 	case types.INT:
-		return types.NewNumberBuilder(types.INTEGER_NUMBER), nil
+		return types.NewNumberBuilder(types.IntegerNumberMode), nil
+	case types.FLOAT:
+		return types.NewNumberBuilder(types.FloatNumberMode), nil
 	case types.SEQ:
 		return types.NewSequenceBuilder(), nil
 	case types.PERSONAL:

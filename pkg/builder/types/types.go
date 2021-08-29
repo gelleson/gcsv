@@ -32,3 +32,20 @@ const (
 	DATE
 	SEQ
 )
+
+func (t TYPE) String() string {
+	switch t {
+	case DATE:
+		return "Date"
+	case FLOAT:
+		return "Float"
+	case INT:
+		return "Integer"
+	case PERSONAL:
+		return "Sequence"
+	case STRING:
+		return "String"
+	default:
+		return "Type: NA"
+	}
+}

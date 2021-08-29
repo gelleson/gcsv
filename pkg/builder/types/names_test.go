@@ -20,12 +20,48 @@
  * SOFTWARE.
  */
 
-package builder
+package types
 
-import "github.com/gelleson/gcsv/pkg/builder/types"
+import (
+	"github.com/stretchr/testify/suite"
+	"testing"
+)
 
-type Builder interface {
-	Initiate(config types.Config) error
-	Build(...string) string
-	Validate() error
+type NameSuite struct {
+	suite.Suite
+	nameBuilder HumanNameBuilder
+}
+
+func (s *NameSuite) SetupTest() {
+	s.nameBuilder = *NewHumanNameBuilder()
+}
+
+func (s NameSuite) TestInitial() {
+	err := s.nameBuilder.Initiate(Sequence{
+		Initial: 2,
+	})
+
+	s.Assert().Error(err)
+
+	err = s.nameBuilder.Initiate(Human{
+		Mode: FullNameMode,
+	})
+
+	s.Assert().Nil(err)
+}
+
+func (s NameSuite) TestBuild() {
+	err := s.nameBuilder.Initiate(Human{
+		Mode: FirstNameMode,
+	})
+
+	s.Assert().Nil(err)
+
+	n1 := s.nameBuilder.Build()
+
+	s.Assert().NotZero(n1)
+}
+
+func TestName(t *testing.T) {
+	suite.Run(t, new(NameSuite))
 }

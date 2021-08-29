@@ -25,7 +25,6 @@ package types
 import (
 	"errors"
 	"github.com/araddon/dateparse"
-	"github.com/gelleson/gcsv/pkg/builder"
 	"math/rand"
 	"time"
 )
@@ -48,6 +47,19 @@ func (d Date) GetFormat() string {
 }
 
 func (d Date) Validate() error {
+
+	_, err := time.Parse(d.GetFormat(), d.To)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = time.Parse(d.GetFormat(), d.From)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -73,7 +85,7 @@ func randate(since, until time.Time) time.Time {
 	return time.Unix(sec, 0)
 }
 
-func (d *DateBuilder) Initiate(config builder.Config) error {
+func (d *DateBuilder) Initiate(config Config) error {
 
 	if err := config.Validate(); err != nil {
 		return err

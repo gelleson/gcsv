@@ -20,12 +20,55 @@
  * SOFTWARE.
  */
 
-package builder
+package types
 
-import "github.com/gelleson/gcsv/pkg/builder/types"
+import (
+	"github.com/stretchr/testify/suite"
+	"strconv"
+	"testing"
+)
 
-type Builder interface {
-	Initiate(config types.Config) error
-	Build(...string) string
-	Validate() error
+type SeqSuite struct {
+	suite.Suite
+	sequenceBuilder SequenceBuilder
+}
+
+func (s *SeqSuite) SetupTest() {
+	s.sequenceBuilder = *NewSequenceBuilder()
+}
+
+func (s *SeqSuite) TestInitial() {
+	err := s.sequenceBuilder.Initiate(Sequence{
+		Initial: 2,
+	})
+
+	s.Assert().Nil(err)
+}
+
+func (s *SeqSuite) TestBuild() {
+	err := s.sequenceBuilder.Initiate(Sequence{
+		Initial: 2,
+	})
+
+	s.Assert().Nil(err)
+
+	n1 := s.sequenceBuilder.Build()
+
+	number, err := strconv.Atoi(n1)
+
+	s.Assert().Nil(err)
+
+	s.Assert().Equal(3, number)
+
+	n1 = s.sequenceBuilder.Build()
+
+	number, err = strconv.Atoi(n1)
+
+	s.Assert().Nil(err)
+
+	s.Assert().Equal(4, number)
+}
+
+func TestSeq(t *testing.T) {
+	suite.Run(t, new(SeqSuite))
 }

@@ -23,65 +23,78 @@
 package types
 
 import (
+	"errors"
+	"fmt"
 	"github.com/icrowley/fake"
-	"strconv"
+	"math/rand"
 )
 
-type numbersType string
-
-const (
-	INTEGER_NUMBER = "int"
-	FLOAT_NUMBER   = "float"
-)
-
-type NumberBuilder struct {
-	numbersMode numbersType
-	from        float64
-	to          float64
+type Number struct {
+	From float64 `yaml:"from" json:"from"`
+	To   float64 `yaml:"to" json:"to"`
 }
 
-func NewNumberBuilder(numbersMode numbersType) *NumberBuilder {
-	return &NumberBuilder{numbersMode: numbersMode}
-}
+func (n Number) Validate() error {
 
-func (n *NumberBuilder) Initiate(config map[string]string) error {
-
-	from, exist := config["from"]
-
-	if exist {
-		fromInt, err := strconv.Atoi(from)
-
-		if err != nil {
-			return err
-		}
-
-		n.from = float64(fromInt)
-	} else {
-		n.from = 100_000_000
-	}
-
-	to, exist := config["from"]
-
-	if exist {
-		toInt, err := strconv.Atoi(to)
-
-		if err != nil {
-			return err
-		}
-
-		n.to = float64(toInt)
-
-	} else {
-		n.to = 0
+	if (n.From != 0 && n.To != 0) && n.From >= n.To {
+		return errors.New("from should be lower than to")
 	}
 
 	return nil
 }
 
-func (n *NumberBuilder) Build(args ...string) string {
-	return fake.Digits()
+type NumberMode string
+
+const (
+	IntegerNumberMode NumberMode = "int"
+	FloatNumberMode   NumberMode = "float"
+)
+
+type NumberBuilder struct {
+	numbersMode NumberMode
+	from        float64
+	to          float64
 }
 
-func (n *NumberBuilder) Validate() error {
+func NewNumberBuilder(numbersMode NumberMode) *NumberBuilder {
+	return &NumberBuilder{numbersMode: numbersMode}
+}
+
+func (n *NumberBuilder) Initiate(config Config) error {
+
+	if err := config.Validate(); err != nil {
+		return err
+	}
+
+	numbers, exist := config.(Number)
+
+	if !exist {
+		return errors.New("invalidate type")
+	}
+
+	n.to = numbers.To
+
+	if n.to == 0 {
+		n.to = 100_000_000
+	}
+
+	n.from = numbers.From
+
+	return nil
+}
+
+func (n NumberBuilder) Build(args ...string) string {
+
+	switch n.numbersMode {
+	case IntegerNumberMode:
+		return fmt.Sprintf("%v", rand.Intn(int(n.to-n.from+1))+int(n.from))
+	case FloatNumberMode:
+		return fmt.Sprintf("%v", n.from+rand.Float64()*(n.to-n.from))
+	default:
+		return fake.Digits()
+	}
+}
+
+func (n NumberBuilder) Validate() error {
 	return nil
 }

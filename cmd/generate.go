@@ -26,12 +26,16 @@ import (
 	"fmt"
 	"github.com/gelleson/gcsv/pkg/generator"
 	"github.com/gelleson/gcsv/pkg/parser"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
+)
+
+var (
+	verboseFlag bool
 )
 
 var generate = &cobra.Command{
@@ -50,29 +54,38 @@ var generate = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		logger := logrus.New()
+
+		if verboseFlag {
+			logger.SetLevel(logrus.DebugLevel)
+		} else {
+			logger.SetLevel(logrus.InfoLevel)
+		}
+
 		file, err := os.OpenFile(args[0], os.O_RDONLY, 0600)
 
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 		bytesByFile, err := ioutil.ReadAll(file)
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
+
 		var config parser.Config
 		err = yaml.Unmarshal(bytesByFile, &config)
+
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			logger.Fatal(err)
 		}
-		parser := parser.NewParser(config)
+
+		parser := parser.NewParser(config, logger.WithField("context", "parser"))
 		documents := parser.PreparedDocument()
-		gen := generator.NewGenerator(documents)
+
+		gen := generator.NewGenerator(documents, logger.WithField("context", "generator"))
+
 		if err = gen.Generate(); err != nil {
-			fmt.Println("")
-			fmt.Println(err.Error())
-			fmt.Println("")
-			os.Exit(1)
+			logger.Fatal(err)
 		}
 
 		fmt.Println("")
@@ -80,4 +93,8 @@ var generate = &cobra.Command{
 		fmt.Println("")
 
 	},
+}
+
+func init() {
+	generate.Flags().BoolVarP(&verboseFlag, "verbose", "v", false, "")
 }

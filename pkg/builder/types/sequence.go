@@ -23,10 +23,27 @@
 package types
 
 import (
+	"errors"
 	"fmt"
-	"strconv"
 	"sync"
 )
+
+type Sequence struct {
+	Initial int
+}
+
+func (s Sequence) GetInitialSequence() int {
+
+	if s.Initial == 0 {
+		return 1
+	}
+
+	return s.Initial
+}
+
+func (s Sequence) Validate() error {
+	return nil
+}
 
 type SequenceBuilder struct {
 	sequence int
@@ -37,25 +54,21 @@ func NewSequenceBuilder() *SequenceBuilder {
 	return &SequenceBuilder{}
 }
 
-func (b *SequenceBuilder) Initiate(config map[string]string) error {
+func (b *SequenceBuilder) Initiate(config Config) error {
 	b.mx.Lock()
 	defer b.mx.Unlock()
 
-	b.sequence = 1
-
-	_, exist := config["initial_sequence"]
-
-	if exist {
-		sequence := config["initial_sequence"]
-
-		sequenceInt, err := strconv.Atoi(sequence)
-
-		if err != nil {
-			return err
-		}
-
-		b.sequence = sequenceInt
+	if err := config.Validate(); err != nil {
+		return err
 	}
+
+	sequencer, exist := config.(Sequence)
+
+	if !exist {
+		return errors.New("invalidate type")
+	}
+
+	b.sequence = sequencer.GetInitialSequence()
 
 	return nil
 }
