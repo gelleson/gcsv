@@ -20,15 +20,55 @@
  * SOFTWARE.
  */
 
-package generator
+package types
 
-type TYPE int
-
-const (
-	INT TYPE = iota
-	FLOAT
-	STRING
-	PERSONAL
-	DATE
-	SEQ
+import (
+	"fmt"
+	"strconv"
+	"sync"
 )
+
+type SequenceBuilder struct {
+	sequence int
+	mx       sync.Mutex
+}
+
+func NewSequenceBuilder() *SequenceBuilder {
+	return &SequenceBuilder{}
+}
+
+func (b *SequenceBuilder) Initiate(config map[string]string) error {
+	b.mx.Lock()
+	defer b.mx.Unlock()
+
+	b.sequence = 1
+
+	_, exist := config["initial_sequence"]
+
+	if exist {
+		sequence := config["initial_sequence"]
+
+		sequenceInt, err := strconv.Atoi(sequence)
+
+		if err != nil {
+			return err
+		}
+
+		b.sequence = sequenceInt
+	}
+
+	return nil
+}
+
+func (b *SequenceBuilder) Validate() error {
+	return nil
+}
+
+func (b *SequenceBuilder) Build(args ...string) string {
+	b.mx.Lock()
+	defer b.mx.Unlock()
+
+	b.sequence++
+
+	return fmt.Sprintf("%d", b.sequence)
+}

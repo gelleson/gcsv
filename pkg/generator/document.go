@@ -22,6 +22,10 @@
 
 package generator
 
+import (
+	"github.com/gelleson/gcsv/pkg/builder/types"
+)
+
 type Document struct {
 	Name       string
 	Rows       int
@@ -40,7 +44,7 @@ type Builder interface {
 }
 
 type Field struct {
-	Type TYPE
+	Type types.TYPE
 }
 
 type Column struct {

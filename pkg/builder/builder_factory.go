@@ -20,68 +20,27 @@
  * SOFTWARE.
  */
 
-package datatypes
+package builder
 
 import (
-	"github.com/icrowley/fake"
-	"strconv"
+	"errors"
+	"fmt"
+	"github.com/gelleson/gcsv/pkg/builder/types"
+	"github.com/gelleson/gcsv/pkg/generator"
 )
 
-type numbersType string
+func Factory(dt types.TYPE) (generator.Builder, error) {
 
-const (
-	INTEGER_NUMBER = "int"
-	FLOAT_NUMBER   = "float"
-)
-
-type NumberBuilder struct {
-	numbersMode numbersType
-	from        float64
-	to          float64
-}
-
-func NewNumberBuilder(numbersMode numbersType) *NumberBuilder {
-	return &NumberBuilder{numbersMode: numbersMode}
-}
-
-func (n *NumberBuilder) Initiate(config map[string]string) error {
-
-	from, exist := config["from"]
-
-	if exist {
-		fromInt, err := strconv.Atoi(from)
-
-		if err != nil {
-			return err
-		}
-
-		n.from = float64(fromInt)
-	} else {
-		n.from = 100_000_000
+	switch dt {
+	case types.INT:
+		return types.NewNumberBuilder(types.INTEGER_NUMBER), nil
+	case types.SEQ:
+		return types.NewSequenceBuilder(), nil
+	case types.PERSONAL:
+		return types.NewHumanNameBuilder(), nil
+	case types.DATE:
+		return types.NewDateBuilder(), nil
+	default:
+		return nil, errors.New(fmt.Sprintf("%v doesn't support type", dt))
 	}
-
-	to, exist := config["from"]
-
-	if exist {
-		toInt, err := strconv.Atoi(to)
-
-		if err != nil {
-			return err
-		}
-
-		n.to = float64(toInt)
-
-	} else {
-		n.to = 0
-	}
-
-	return nil
-}
-
-func (n *NumberBuilder) Build(args ...string) string {
-	return fake.Digits()
-}
-
-func (n *NumberBuilder) Validate() error {
-	return nil
 }
