@@ -28,6 +28,7 @@ import (
 	"github.com/gelleson/gcsv/pkg/builder/types"
 )
 
+// Factory is returns struct which implement Builder interface
 func Factory(dt types.TYPE) (Builder, error) {
 
 	switch dt {

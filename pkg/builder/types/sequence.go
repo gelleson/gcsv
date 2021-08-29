@@ -41,6 +41,7 @@ func (s Sequence) GetInitialSequence() int {
 	return s.Initial
 }
 
+// Validate check struct
 func (s Sequence) Validate() error {
 	return nil
 }
@@ -73,6 +74,7 @@ func (b *SequenceBuilder) Initiate(config Config) error {
 	return nil
 }
 
+// Validate check struct
 func (b *SequenceBuilder) Validate() error {
 	return nil
 }

@@ -28,10 +28,9 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-type Decoder interface {
-	Decode(interface{}) error
-}
-
+// ExtractArgs function to map to types builder which implement types.Config
+// e.g. if typeObj = types.INT
+// it should map decoded to builder that implement types.Config interface
 func ExtractArgs(typeObj types.TYPE, decoded map[string]interface{}) (types.Config, error) {
 
 	switch typeObj {
