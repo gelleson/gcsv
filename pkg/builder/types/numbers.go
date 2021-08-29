@@ -29,11 +29,15 @@ import (
 	"math/rand"
 )
 
+// Number is strategy to generate number related column
 type Number struct {
+	// From is first possible integer
 	From float64 `yaml:"from" json:"from"`
-	To   float64 `yaml:"to" json:"to"`
+	// To is last possible integer
+	To float64 `yaml:"to" json:"to"`
 }
 
+// Validate check struct
 func (n Number) Validate() error {
 
 	if (n.From != 0 && n.To != 0) && n.From >= n.To {
@@ -43,23 +47,29 @@ func (n Number) Validate() error {
 	return nil
 }
 
+// NumberMode is possible modes
 type NumberMode string
 
 const (
+	// IntegerNumberMode is integer
 	IntegerNumberMode NumberMode = "int"
-	FloatNumberMode   NumberMode = "float"
+	// FloatNumberMode is float
+	FloatNumberMode NumberMode = "float"
 )
 
+// NumberBuilder is build number data
 type NumberBuilder struct {
 	numbersMode NumberMode
 	from        float64
 	to          float64
 }
 
+// NewNumberBuilder is constructor of NumberBuilder
 func NewNumberBuilder(numbersMode NumberMode) *NumberBuilder {
 	return &NumberBuilder{numbersMode: numbersMode}
 }
 
+// Initiate is need to init struct
 func (n *NumberBuilder) Initiate(config Config) error {
 
 	if err := config.Validate(); err != nil {
@@ -83,6 +93,7 @@ func (n *NumberBuilder) Initiate(config Config) error {
 	return nil
 }
 
+// Build return generated value
 func (n NumberBuilder) Build(args ...string) string {
 
 	switch n.numbersMode {
@@ -95,6 +106,7 @@ func (n NumberBuilder) Build(args ...string) string {
 	}
 }
 
+// Validate check struct
 func (n NumberBuilder) Validate() error {
 	return nil
 }

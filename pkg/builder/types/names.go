@@ -35,23 +35,29 @@ const (
 	FullNameMode  HumanMode = "fullname"
 )
 
+// Human is to struct to generate personal data
 type Human struct {
+	// Mode is defined what will return it
 	Mode HumanMode `json:"mode" yaml:"mode"`
 }
 
+// Validate check struct
 func (h Human) Validate() error {
 	return nil
 }
 
+// HumanNameBuilder is build personal data
 type HumanNameBuilder struct {
 	mode      HumanMode
 	generator func() string
 }
 
+// NewHumanNameBuilder is constructor of HumanNameBuilder
 func NewHumanNameBuilder() *HumanNameBuilder {
 	return &HumanNameBuilder{}
 }
 
+// Validate check struct
 func (h *HumanNameBuilder) Validate() error {
 
 	switch h.mode {
@@ -72,6 +78,7 @@ func (h *HumanNameBuilder) Validate() error {
 	}
 }
 
+// Initiate is need to init struct
 func (h *HumanNameBuilder) Initiate(config Config) error {
 
 	if err := config.Validate(); err != nil {
@@ -89,6 +96,7 @@ func (h *HumanNameBuilder) Initiate(config Config) error {
 	return nil
 }
 
+// Build return generated value
 func (h *HumanNameBuilder) Build(s ...string) string {
 
 	_ = h.Validate()

@@ -31,12 +31,18 @@ import (
 
 const defaultFormat = "2006-01-02"
 
+// Date is strategy to generate date related column
 type Date struct {
-	From   string
-	To     string
+	// From is date time which should start from this date
+	From string
+	// To is last range of the possible date
+	To string
+	// Format is means result of the date generation.
+	// Also, From and To fields are validated by Format
 	Format string
 }
 
+// GetFormat is returns defaultFormat or Format field
 func (d Date) GetFormat() string {
 
 	if d.Format == "" {
@@ -46,6 +52,7 @@ func (d Date) GetFormat() string {
 	return d.Format
 }
 
+// Validate is check struct
 func (d Date) Validate() error {
 
 	_, err := time.Parse(d.GetFormat(), d.To)
@@ -63,6 +70,7 @@ func (d Date) Validate() error {
 	return nil
 }
 
+// DateBuilder is generate dates
 type DateBuilder struct {
 	format string
 	from   string
@@ -72,6 +80,7 @@ type DateBuilder struct {
 	toTime   time.Time
 }
 
+// NewDateBuilder is constructor of the DateBuilder
 func NewDateBuilder() *DateBuilder {
 	return &DateBuilder{}
 }
@@ -85,6 +94,7 @@ func randate(since, until time.Time) time.Time {
 	return time.Unix(sec, 0)
 }
 
+// Initiate is need to init struct
 func (d *DateBuilder) Initiate(config Config) error {
 
 	if err := config.Validate(); err != nil {
@@ -105,6 +115,7 @@ func (d *DateBuilder) Initiate(config Config) error {
 	return nil
 }
 
+// Build return generated value
 func (d *DateBuilder) Build(args ...string) string {
 
 	from := time.Date(1970, time.February, 1, 1, 1, 1, 1, time.Local)
@@ -121,6 +132,7 @@ func (d *DateBuilder) Build(args ...string) string {
 	return randate(from, until).Format(d.format)
 }
 
+// Validate check internal state of the builder
 func (d *DateBuilder) Validate() error {
 
 	if d.from != "" {
