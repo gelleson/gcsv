@@ -55,7 +55,7 @@ func (n NumberSuite) TestInitial() {
 		To:   0,
 	})
 
-	n.Assert().Error(err)
+	n.Assert().Nil(err)
 }
 
 func (n NumberSuite) TestValidate() {
