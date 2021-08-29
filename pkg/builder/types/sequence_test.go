@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. gelleson
+ * Copyright (c) 2021. gelleson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,65 +23,52 @@
 package types
 
 import (
-	"errors"
-	"fmt"
-	"sync"
+	"github.com/stretchr/testify/suite"
+	"strconv"
+	"testing"
 )
 
-type Sequence struct {
-	Initial int
+type SeqSuite struct {
+	suite.Suite
+	sequenceBuilder SequenceBuilder
 }
 
-func (s Sequence) GetInitialSequence() int {
-
-	if s.Initial == 0 {
-		return 1
-	}
-
-	return s.Initial
+func (s *SeqSuite) SetupTest() {
+	s.sequenceBuilder = *NewSequenceBuilder()
 }
 
-func (s Sequence) Validate() error {
-	return nil
+func (s *SeqSuite) TestInitial() {
+	err := s.sequenceBuilder.Initiate(Sequence{
+		Initial: 2,
+	})
+
+	s.Assert().Nil(err)
 }
 
-type SequenceBuilder struct {
-	sequence int
-	mx       sync.Mutex
+func (s *SeqSuite) TestBuild() {
+	err := s.sequenceBuilder.Initiate(Sequence{
+		Initial: 2,
+	})
+
+	s.Assert().Nil(err)
+
+	n1 := s.sequenceBuilder.Build()
+
+	number, err := strconv.Atoi(n1)
+
+	s.Assert().Nil(err)
+
+	s.Assert().Equal(3, number)
+
+	n1 = s.sequenceBuilder.Build()
+
+	number, err = strconv.Atoi(n1)
+
+	s.Assert().Nil(err)
+
+	s.Assert().Equal(4, number)
 }
 
-func NewSequenceBuilder() *SequenceBuilder {
-	return &SequenceBuilder{}
-}
-
-func (b *SequenceBuilder) Initiate(config Config) error {
-	b.mx.Lock()
-	defer b.mx.Unlock()
-
-	if err := config.Validate(); err != nil {
-		return err
-	}
-
-	sequencer, exist := config.(Sequence)
-
-	if !exist {
-		return errors.New("invalidate type")
-	}
-
-	b.sequence = sequencer.GetInitialSequence()
-
-	return nil
-}
-
-func (b *SequenceBuilder) Validate() error {
-	return nil
-}
-
-func (b *SequenceBuilder) Build(args ...string) string {
-	b.mx.Lock()
-	defer b.mx.Unlock()
-
-	b.sequence++
-
-	return fmt.Sprintf("%d", b.sequence)
+func TestSeq(t *testing.T) {
+	suite.Run(t, new(SeqSuite))
 }

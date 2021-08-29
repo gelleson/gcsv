@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. gelleson
+ * Copyright (c) 2021. gelleson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,68 +20,58 @@
  * SOFTWARE.
  */
 
-package types
+package builder
 
 import (
 	"errors"
-	"fmt"
-	"sync"
+	"github.com/gelleson/gcsv/pkg/builder/types"
+	"github.com/mitchellh/mapstructure"
 )
 
-type Sequence struct {
-	Initial int
+type Decoder interface {
+	Decode(interface{}) error
 }
 
-func (s Sequence) GetInitialSequence() int {
+func ExtractArgs(typeObj types.TYPE, decoded map[string]interface{}) (types.Config, error) {
 
-	if s.Initial == 0 {
-		return 1
+	switch typeObj {
+	case types.INT, types.FLOAT:
+		obj := types.Number{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	case types.SEQ:
+		obj := types.Sequence{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	case types.PERSONAL:
+		obj := types.Human{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	case types.DATE:
+		obj := types.Date{}
+
+		if err := mapstructure.Decode(decoded, &obj); err != nil {
+			return nil, err
+		}
+
+		return obj, nil
+
+	default:
+		return nil, errors.New("doesn't support type")
 	}
-
-	return s.Initial
-}
-
-func (s Sequence) Validate() error {
-	return nil
-}
-
-type SequenceBuilder struct {
-	sequence int
-	mx       sync.Mutex
-}
-
-func NewSequenceBuilder() *SequenceBuilder {
-	return &SequenceBuilder{}
-}
-
-func (b *SequenceBuilder) Initiate(config Config) error {
-	b.mx.Lock()
-	defer b.mx.Unlock()
-
-	if err := config.Validate(); err != nil {
-		return err
-	}
-
-	sequencer, exist := config.(Sequence)
-
-	if !exist {
-		return errors.New("invalidate type")
-	}
-
-	b.sequence = sequencer.GetInitialSequence()
-
-	return nil
-}
-
-func (b *SequenceBuilder) Validate() error {
-	return nil
-}
-
-func (b *SequenceBuilder) Build(args ...string) string {
-	b.mx.Lock()
-	defer b.mx.Unlock()
-
-	b.sequence++
-
-	return fmt.Sprintf("%d", b.sequence)
 }

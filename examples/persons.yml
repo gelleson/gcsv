@@ -15,7 +15,7 @@ documents:
         type: date
         kwargs:
           format: 2006-01-02 03:04:05
-          from: 2020
-          to: 2021
+          from: '2006-01-02 03:04:05'
+          to: '2012-01-02 03:04:05'
       - name: random_int
         type: int

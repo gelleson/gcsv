@@ -27,14 +27,24 @@ import (
 	"github.com/icrowley/fake"
 )
 
+type HumanMode string
+
 const (
-	FIRST_NAME = "first_name"
-	LAST_NAME  = "last_name"
-	FULLNAME   = "fullname"
+	FirstNameMode HumanMode = "first_name"
+	LastNameMode  HumanMode = "last_name"
+	FullNameMode  HumanMode = "fullname"
 )
 
+type Human struct {
+	Mode HumanMode `json:"mode" yaml:"mode"`
+}
+
+func (h Human) Validate() error {
+	return nil
+}
+
 type HumanNameBuilder struct {
-	mode      string
+	mode      HumanMode
 	generator func() string
 }
 
@@ -45,15 +55,15 @@ func NewHumanNameBuilder() *HumanNameBuilder {
 func (h *HumanNameBuilder) Validate() error {
 
 	switch h.mode {
-	case FIRST_NAME:
+	case FirstNameMode:
 		h.generator = fake.FirstName
 
 		return nil
-	case LAST_NAME:
+	case LastNameMode:
 		h.generator = fake.LastName
 
 		return nil
-	case FULLNAME:
+	case FullNameMode:
 		h.generator = fake.FullName
 
 		return nil
@@ -62,20 +72,26 @@ func (h *HumanNameBuilder) Validate() error {
 	}
 }
 
-func (h *HumanNameBuilder) Initiate(config map[string]string) error {
+func (h *HumanNameBuilder) Initiate(config Config) error {
 
-	mode, exist := config["mode"]
-
-	if !exist {
-		mode = FULLNAME
+	if err := config.Validate(); err != nil {
+		return err
 	}
 
-	h.mode = mode
+	humanConfig, exist := config.(Human)
+
+	if !exist {
+		return errors.New("invalid human kwargs")
+	}
+
+	h.mode = humanConfig.Mode
 
 	return nil
 }
 
 func (h *HumanNameBuilder) Build(s ...string) string {
+
+	_ = h.Validate()
 
 	return h.generator()
 }

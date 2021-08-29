@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. gelleson
+ * Copyright (c) 2021. gelleson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,68 +20,72 @@
  * SOFTWARE.
  */
 
-package types
+package builder
 
 import (
-	"errors"
-	"fmt"
-	"sync"
+	"github.com/gelleson/gcsv/pkg/builder/types"
+	"testing"
 )
 
-type Sequence struct {
-	Initial int
-}
-
-func (s Sequence) GetInitialSequence() int {
-
-	if s.Initial == 0 {
-		return 1
+func TestFactory(t *testing.T) {
+	type args struct {
+		dt types.TYPE
 	}
-
-	return s.Initial
-}
-
-func (s Sequence) Validate() error {
-	return nil
-}
-
-type SequenceBuilder struct {
-	sequence int
-	mx       sync.Mutex
-}
-
-func NewSequenceBuilder() *SequenceBuilder {
-	return &SequenceBuilder{}
-}
-
-func (b *SequenceBuilder) Initiate(config Config) error {
-	b.mx.Lock()
-	defer b.mx.Unlock()
-
-	if err := config.Validate(); err != nil {
-		return err
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "date case",
+			args: args{
+				dt: types.DATE,
+			},
+			wantErr: false,
+		},
+		{
+			name: "int case",
+			args: args{
+				dt: types.INT,
+			},
+			wantErr: false,
+		},
+		{
+			name: "float case",
+			args: args{
+				dt: types.FLOAT,
+			},
+			wantErr: false,
+		},
+		{
+			name: "personal case",
+			args: args{
+				dt: types.PERSONAL,
+			},
+			wantErr: false,
+		},
+		{
+			name: "seq case",
+			args: args{
+				dt: types.SEQ,
+			},
+			wantErr: false,
+		},
+		{
+			name: "str case",
+			args: args{
+				dt: types.STRING,
+			},
+			wantErr: true,
+		},
 	}
-
-	sequencer, exist := config.(Sequence)
-
-	if !exist {
-		return errors.New("invalidate type")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := Factory(tt.args.dt)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Factory() arg = %v error = %v, wantErr %v", tt.args.dt, err, tt.wantErr)
+				return
+			}
+		})
 	}
-
-	b.sequence = sequencer.GetInitialSequence()
-
-	return nil
-}
-
-func (b *SequenceBuilder) Validate() error {
-	return nil
-}
-
-func (b *SequenceBuilder) Build(args ...string) string {
-	b.mx.Lock()
-	defer b.mx.Unlock()
-
-	b.sequence++
-
-	return fmt.Sprintf("%d", b.sequence)
 }

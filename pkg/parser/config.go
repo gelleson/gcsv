@@ -25,20 +25,26 @@ package parser
 import (
 	"github.com/gelleson/gcsv/pkg/builder/types"
 	"github.com/gelleson/gcsv/pkg/generator"
+	"github.com/sirupsen/logrus"
 )
 
 // Parser uses to parse yaml document
 type Parser struct {
 	config Config
+	logger *logrus.Entry
 }
 
 // NewParser construct instance of Parser
-func NewParser(config Config) *Parser {
-	return &Parser{config: config}
+func NewParser(config Config, logger *logrus.Entry) *Parser {
+	return &Parser{config: config, logger: logger}
 }
 
 func (p Parser) prepareDocument() []generator.Document {
+
+	p.logger.Debugln("Started to Parse Documents")
+
 	var documents []generator.Document
+
 	for _, doc := range p.config.Documents {
 		document := generator.NewDocument(doc.Name)
 		document.WithHeader = doc.WithHeader
@@ -56,6 +62,9 @@ func (p Parser) prepareDocument() []generator.Document {
 		}
 		documents = append(documents, document)
 	}
+
+	p.logger.Debugf("Total documents %v", len(documents))
+
 	return documents
 }
 
