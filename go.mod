@@ -1,6 +1,6 @@
 module github.com/gelleson/gcsv
 
-go 1.15
+go 1.17
 
 require (
 	github.com/araddon/dateparse v0.0.0-20201001162425-8aadafed4dc4
