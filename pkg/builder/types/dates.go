@@ -23,12 +23,33 @@
 package types
 
 import (
+	"errors"
 	"github.com/araddon/dateparse"
+	"github.com/gelleson/gcsv/pkg/builder"
 	"math/rand"
 	"time"
 )
 
 const defaultFormat = "2006-01-02"
+
+type Date struct {
+	From   string
+	To     string
+	Format string
+}
+
+func (d Date) GetFormat() string {
+
+	if d.Format == "" {
+		return defaultFormat
+	}
+
+	return d.Format
+}
+
+func (d Date) Validate() error {
+	return nil
+}
 
 type DateBuilder struct {
 	format string
@@ -52,18 +73,22 @@ func randate(since, until time.Time) time.Time {
 	return time.Unix(sec, 0)
 }
 
-func (d *DateBuilder) Initiate(config map[string]string) error {
+func (d *DateBuilder) Initiate(config builder.Config) error {
 
-	format, exist := config["format"]
-
-	if !exist {
-		format = defaultFormat
+	if err := config.Validate(); err != nil {
+		return err
 	}
 
-	d.from = config["from"]
-	d.to = config["to"]
+	format, exist := config.(Date)
 
-	d.format = format
+	if !exist {
+		return errors.New("invalidate type")
+	}
+
+	d.from = format.From
+	d.to = format.To
+
+	d.format = format.GetFormat()
 
 	return nil
 }
