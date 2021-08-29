@@ -23,6 +23,7 @@
 package parser
 
 import (
+	"github.com/gelleson/gcsv/pkg/builder/types"
 	"github.com/gelleson/gcsv/pkg/generator"
 )
 
@@ -58,22 +59,22 @@ func (p Parser) prepareDocument() []generator.Document {
 	return documents
 }
 
-func (p Parser) columnType(c string) generator.TYPE {
+func (p Parser) columnType(c string) types.TYPE {
 	switch c {
 	case "int":
-		return generator.INT
+		return types.INT
 	case "float":
-		return generator.FLOAT
+		return types.FLOAT
 	case "date":
-		return generator.DATE
+		return types.DATE
 	case "seq":
-		return generator.SEQ
+		return types.SEQ
 	case "string":
-		return generator.PERSONAL
+		return types.PERSONAL
 	case "personal":
-		return generator.PERSONAL
+		return types.PERSONAL
 	default:
-		return generator.STRING
+		return types.STRING
 	}
 }
 

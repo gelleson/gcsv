@@ -25,6 +25,7 @@ package generator
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/gelleson/gcsv/pkg/builder"
 	"log"
 	"os"
 )
@@ -80,28 +81,28 @@ func (g Generator) newRecords(document Document) ([][]string, error) {
 	for _, value := range document.Columns {
 		field := value.Field
 
-		builder, err := BuilderFactory(field.Type)
+		builderInstance, err := builder.Factory(field.Type)
 
 		if err != nil {
 			return nil, err
 		}
 
-		if err := builder.Initiate(value.Kwargs); err != nil {
+		if err := builderInstance.Initiate(value.Kwargs); err != nil {
 			return nil, err
 		}
 
-		if err := builder.Validate(); err != nil {
+		if err := builderInstance.Validate(); err != nil {
 			return nil, err
 		}
 
-		builders = append(builders, builder)
+		builders = append(builders, builderInstance)
 	}
 
 	for i := 1; i < document.Rows; i++ {
 		record := make([]string, 0)
 
-		for _, builder := range builders {
-			generatedValue := builder.Build()
+		for _, builderInstance := range builders {
+			generatedValue := builderInstance.Build()
 
 			record = append(record, generatedValue)
 		}

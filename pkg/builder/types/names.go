@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package datatypes
+package types
 
 import (
 	"errors"
