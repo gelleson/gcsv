@@ -3,19 +3,16 @@ module github.com/gelleson/gcsv
 go 1.17
 
 require (
-	github.com/araddon/dateparse v0.0.0-20201001162425-8aadafed4dc4
-	github.com/common-nighthawk/go-figure v0.0.0-20200609044655-c4b36f998cf2
-	github.com/corpix/uarand v0.0.0 // indirect
-	github.com/go-yaml/yaml v2.1.0+incompatible // indirect
+	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
+	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
+	github.com/corpix/uarand v0.1.1 // indirect
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/mitchellh/go-homedir v1.1.0 // indirect
-	github.com/spf13/cobra v0.0.3
-	github.com/spf13/viper v1.3.2 // indirect
-	golang.org/x/crypto v0.0.0-20190417174047-f416ebab96af // indirect
-	golang.org/x/lint v0.0.0-20190409202823-959b441ac422 // indirect
-	golang.org/x/net v0.0.0-20190415214537-1da14a5a36f2 // indirect
-	golang.org/x/sys v0.0.0-20190416152802-12500544f89f // indirect
-	golang.org/x/tools v0.0.0-20190417223002-a5870b403859 // indirect
-	gopkg.in/yaml.v2 v2.2.2
+	github.com/spf13/cobra v1.2.1
+	gopkg.in/yaml.v2 v2.4.0
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 )
